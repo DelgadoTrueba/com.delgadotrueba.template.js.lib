@@ -2,7 +2,7 @@
   "extends": "./tsconfig.mjs.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "types": ["jest"]
+    "types": ["@types/jest"]
   },
   "include": [
     "jest.config.ts",
