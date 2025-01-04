@@ -2,7 +2,6 @@
   "name": "@delgadotrueba/template-js",
   "version": "0.0.1",
   "description": "Description",
-  "author": "delgadotrueba",
   "keywords": [
     "http",
     "httpMock",
@@ -10,6 +9,10 @@
     "httpService"
   ],
   "license": "MIT",
+   "author": {
+    "name": "delgadotrueba",
+    "email": "delgadotrueba@pobox.com"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/delgadotrueba/template-js"
