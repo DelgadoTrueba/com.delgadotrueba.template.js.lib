@@ -2,7 +2,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-    transform: {
+  transform: {
     '^.+.tsx?$': [
       'ts-jest',
       {
