@@ -1,12 +1,10 @@
 {
-  "name": "@delgadotrueba/template-js",
+  "name": "@delgadotrueba/template-ts",
   "version": "0.0.1",
   "description": "Description",
   "keywords": [
-    "http",
-    "httpMock",
-    "httpMockService",
-    "httpService"
+    "template-ts",
+    "template-typescript"
   ],
   "license": "MIT",
   "author": {
@@ -53,7 +51,6 @@
     "typescript": "5.5.4"
   },
   "dependencies": {
-    "path-to-regexp": "6.2.1",
     "tslib": "2.6.3"
   },
   "publishConfig": {
