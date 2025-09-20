@@ -9,7 +9,7 @@
     "httpService"
   ],
   "license": "MIT",
-   "author": {
+  "author": {
     "name": "delgadotrueba",
     "email": "delgadotrueba@pobox.com"
   },
@@ -23,7 +23,7 @@
     "build:mjs": "npx tsc -p tsconfig.mjs.json",
     "lint": "npx eslint  -c .eslintrc.json src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
-    "test": "npm run test:cjs && npm run test:mjs",
+    "test": "npx jest --projects jest.cjs.config.js jest.mjs.config.js --verbose",
     "test:cjs": "npx jest -c jest.cjs.config.js --verbose",
     "test:mjs": "npx jest -c jest.mjs.config.js --verbose",
     "test:coverage": "npm run test:cjs -- --coverage && npm run test:mjs -- --coverage",
