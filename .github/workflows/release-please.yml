@@ -3,8 +3,7 @@ name: 'Release Please'
 on:
   push:
     branches:
-      - main
-  workflow_dispatch: {} # opcional, para lanzarlo a mano aunque esté “apagado”
+      - disabled # TODO
 
 permissions:
   contents: write
