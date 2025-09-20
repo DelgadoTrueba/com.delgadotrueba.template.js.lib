@@ -1,5 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "files.eol": "\n",
+  "files.eol": "\n", // Fuerza LF en el editor
   "typescript.tsdk": "node_modules\\typescript\\lib"
 }
