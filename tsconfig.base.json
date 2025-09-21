@@ -22,7 +22,7 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
-      "@utils/*": ["src/lib/utils/*"],
+      "@utils/*": ["src/utils/*"],
       "@utils-test/*": ["src/utils-test/*"]
     }
   },
