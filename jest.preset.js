@@ -2,6 +2,9 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  testEnvironmentOptions: {
+    globalsCleanup: 'on',
+  },
   transform: {
     '^.+.tsx?$': [
       'ts-jest',
@@ -11,6 +14,8 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: ['node_modules'],
+  setupFilesAfterEnv: ['<rootDir>/src/utils-test/setupTest.ts'],
+  coverageProvider: 'v8',
   coverageThreshold: {
     global: {
       statements: 40,

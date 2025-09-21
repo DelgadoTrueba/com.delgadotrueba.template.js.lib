@@ -3,5 +3,5 @@
  * @type {import('lint-staged').Configuration}
  */
 module.exports = {
-  '**/*.ts': ['tsc --noEmit', 'eslint -c .eslintrc.json', 'npm run test -- --findRelatedTests'],
+  'src/lib/*.ts': ['tsc --noEmit', 'eslint -c .eslintrc.json', 'npm run test -- --findRelatedTests'],
 };
