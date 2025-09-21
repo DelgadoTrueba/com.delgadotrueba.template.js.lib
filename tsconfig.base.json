@@ -20,7 +20,11 @@
     "skipDefaultLibCheck": true,
     /*Alias*/
     "baseUrl": ".",
-    "rootDir": "."
+    "rootDir": ".",
+    "paths": {
+      "@utils/*": ["src/lib/utils/*"],
+      "@utils-test/*": ["src/utils-test/*"]
+    }
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["node_modules"],
