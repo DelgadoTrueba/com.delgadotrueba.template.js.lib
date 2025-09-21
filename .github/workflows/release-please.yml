@@ -42,9 +42,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies 📦
         if: ${{ steps.release.outputs.release_created }}
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Publish to NPM 🚀
         if: ${{ steps.release.outputs.release_created }}
-        run: npm publish
+        run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

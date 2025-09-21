@@ -16,22 +16,23 @@
     "url": "https://github.com/delgadotrueba/template-js"
   },
   "scripts": {
-    "build": "npm run build:cjs && npm run build:mjs",
-    "build:cjs": "npx tsc -p tsconfig.cjs.json",
-    "build:mjs": "npx tsc -p tsconfig.mjs.json",
-    "lint": "npx eslint  -c .eslintrc.json src/**/*.ts",
-    "lint:fix": "npm run lint -- --fix",
-    "test": "npx jest --projects jest.cjs.config.js jest.mjs.config.js --verbose",
-    "test:cjs": "npx jest -c jest.cjs.config.js --verbose",
-    "test:mjs": "npx jest -c jest.mjs.config.js --verbose",
-    "test:coverage": "npm run test:cjs -- --coverage && npm run test:mjs -- --coverage",
+    "build": "pnpm run build:cjs && pnpm run build:mjs",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:mjs": "tsc -p tsconfig.mjs.json",
+    "lint": "eslint -c .eslintrc.json src/**/*.ts",
+    "lint:fix": "pnpm run lint -- --fix",
+    "test": "jest --projects jest.cjs.config.js jest.mjs.config.js --verbose",
+    "test:cjs": "jest -c jest.cjs.config.js --verbose",
+    "test:mjs": "jest -c jest.mjs.config.js --verbose",
+    "test:coverage": "jest --projects jest.cjs.config.js jest.mjs.config.js --coverage",
     "prepare": "husky",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "pnpm run test && pnpm run build"
   },
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
     "@types/jest": "29.5.12",
+    "@types/node": "24.5.2",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "commitlint": "19.3.0",
