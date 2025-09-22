@@ -19,8 +19,10 @@
     "build": "pnpm run build:cjs && pnpm run build:mjs",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:mjs": "tsc -p tsconfig.mjs.json",
-    "lint": "eslint -c .eslintrc.json src/**/*.ts",
+    "lint": "eslint -c eslint.config.mjs .",
     "lint:fix": "pnpm run lint -- --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
     "test": "jest --projects jest.cjs.config.js jest.mjs.config.js --verbose",
     "test:cjs": "jest -c jest.cjs.config.js --verbose",
     "test:mjs": "jest -c jest.mjs.config.js --verbose",
@@ -31,11 +33,13 @@
   "devDependencies": {
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
+    "@eslint/js": "9.36.0",
     "@types/jest": "30.0.0",
     "@types/node": "24.5.2",
     "commitlint": "19.8.1",
-    "eslint-config-airbnb-base": "15.0.0",
-    "eslint-config-airbnb-typescript": "18.0.0",
+    "eslint": "9.36.0",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "16.4.0",
     "husky": "9.1.7",
     "jest": "30.1.3",
     "jest-environment-jsdom": "30.1.2",
@@ -43,7 +47,8 @@
     "lint-staged": "16.1.6",
     "prettier": "3.6.2",
     "ts-jest": "29.4.4",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.44.0"
   },
   "dependencies": {
     "tslib": "2.6.3"

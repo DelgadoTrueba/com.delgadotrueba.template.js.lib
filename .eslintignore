@@ -1,7 +1,0 @@
-node_modules
-scripts
-commitlint.config.js
-jest.cjs.config.js
-jest.mjs.config.js
-jest.preset.js
-lint-staged.config.js

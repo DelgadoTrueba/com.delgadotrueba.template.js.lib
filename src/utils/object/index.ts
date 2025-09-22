@@ -1,1 +1,1 @@
-export const isPlainObject = (value: any) => value?.constructor === Object;
+export const isPlainObject = (value: unknown) => value?.constructor === Object;
