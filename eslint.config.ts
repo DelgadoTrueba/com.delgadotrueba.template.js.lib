@@ -42,7 +42,7 @@ export default defineConfig([
     settings: {
       'import-x/resolver-next': [
         createTypeScriptImportResolver({
-          project: './tsconfig.base.json',
+          project: './tsconfig.eslint.json',
         }),
       ],
     },
