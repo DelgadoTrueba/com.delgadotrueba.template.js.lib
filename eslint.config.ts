@@ -68,6 +68,27 @@ export default defineConfig([
             'object',
             'type', // type-only imports
           ],
+          // pathGroups: [
+          //   // React siempre primero dentro de "external"
+          //   { pattern: 'react', group: 'external', position: 'before' },
+          //   { pattern: 'react-dom', group: 'external', position: 'before' },
+          //   // Todos los @org/* (monorepo) van al inicio de external
+          //   { pattern: '@mi-org/**', group: 'external', position: 'before' },
+
+          //   // Alias internos de la app (caen en "internal" gracias al resolver TS)
+          //   { pattern: '@/*', group: 'internal', position: 'before' },
+          //   { pattern: '~/*', group: 'internal' },
+
+          //   // Estilos al final de los relativos/internos
+          //   {
+          //     pattern: '**/*.{css,scss,sass,less}',
+          //     group: 'index',
+          //     position: 'after',
+          //   },
+
+          //   // Side-effect imports (vite plugins, polyfills)
+          //   { pattern: '\u0000*', group: 'external', position: 'after' },
+          // ],
           // ¡Importante! Deja que tus pathGroups afecten también a "external"
           pathGroupsExcludedImportTypes: ['builtin'],
           // Espaciado y orden alfabético
