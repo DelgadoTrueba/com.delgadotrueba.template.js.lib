@@ -40,6 +40,9 @@ jobs:
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
+      - name: Enable pnpm
+        if: ${{ steps.release.outputs.release_created }}
+        run: corepack enable pnpm
       - name: Install dependencies 📦
         if: ${{ steps.release.outputs.release_created }}
         run: pnpm install --frozen-lockfile
