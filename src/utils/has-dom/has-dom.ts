@@ -1,2 +1,4 @@
-export const hasDOM = () =>
-  typeof window !== 'undefined' && typeof document !== 'undefined';
+export const hasDOM = () => {
+  const g = globalThis as Record<string, unknown>;
+  return typeof g === 'object' && !!g.window && !!g.document;
+};

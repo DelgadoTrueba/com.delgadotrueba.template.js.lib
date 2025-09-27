@@ -1,9 +1,14 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist/mjs",
-    "declarationDir": "./dist/mjs",
-    "composite": true
+    "outDir": "./dist/esm",
+    "declarationDir": "./dist/esm",
+    "target": "es2015",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "composite": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "verbatimModuleSyntax": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],

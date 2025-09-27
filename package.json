@@ -16,17 +16,20 @@
     "url": "https://github.com/delgadotrueba/template-js"
   },
   "scripts": {
-    "build": "pnpm run build:node && pnpm run build:browser",
-    "build:node": "tsc -p tsconfig.cjs.json",
-    "build:browser": "tsc -p tsconfig.mjs.json",
-    "typecheck": "tsc -p tsconfig.typecheck.json --noEmit",
+    "build": "pnpm run build:cjs && pnpm run build:mjs && pnpm run postbuild",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:mjs": "tsc -p tsconfig.mjs.json",
+    "postbuild": "node ./scripts/copy-package-json.js",
+    "typecheck": "pnpm run typecheck:mjs && pnpm run typecheck:cjs",
+    "typecheck:mjs": "tsc -p tsconfig.mjs.json --noEmit",
+    "typecheck:cjs": "tsc -p tsconfig.cjs.json --noEmit",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "pnpm exec eslint -c eslint.config.ts && pnpm run format && pnpm run typecheck",
     "lint:fix": "pnpm exec eslint -c eslint.config.ts && pnpm run format:fix",
     "test": "jest --projects jest.cjs.config.js jest.mjs.config.js --verbose",
-    "test:node": "jest -c jest.cjs.config.js --verbose",
-    "test:browser": "jest -c jest.mjs.config.js --verbose",
+    "test:cjs": "jest -c jest.cjs.config.js --verbose",
+    "test:mjs": "jest -c jest.mjs.config.js --verbose",
     "test:coverage": "jest --projects jest.cjs.config.js jest.mjs.config.js --coverage",
     "prepare": "husky",
     "prepublishOnly": "pnpm run lint && pnpm run test && pnpm run build"
@@ -63,14 +66,14 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/cjs/src/index.js",
+  "main": "./dist/esm/src/index.js",
   "module": "./dist/mjs/src/index.js",
   "types": "./dist/mjs/src/index.d.ts",
   "exports": {
     ".": {
       "require": {
-        "default": "./dist/cjs/src/index.js",
-        "types": "./dist/cjs/src/index.d.ts"
+        "default": "./dist/esm/src/index.js",
+        "types": "./dist/esm/src/index.d.ts"
       },
       "import": {
         "default": "./dist/mjs/src/index.js",
@@ -79,8 +82,8 @@
     },
     "./public-api": {
       "require": {
-        "default": "./dist/cjs/src/public-api.js",
-        "types": "./dist/cjs/src/public-api.d.ts"
+        "default": "./dist/esm/src/public-api.js",
+        "types": "./dist/esm/src/public-api.d.ts"
       },
       "import": {
         "default": "./dist/mjs/src/public-api.js",

@@ -5,19 +5,20 @@
     "declarationDir": "./dist",
     "target": "es2015",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     /*Emit*/
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     /*Config*/
-    "lib": ["es2020", "dom"],
+    "skipDefaultLibCheck": true,
     "importHelpers": true,
     "sourceMap": true,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     /*Alias*/
     "baseUrl": ".",
     "rootDir": ".",
