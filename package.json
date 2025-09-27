@@ -1,6 +1,6 @@
 {
   "name": "@delgadotrueba/template-ts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Description",
   "keywords": [
     "template-ts",
@@ -66,28 +66,28 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/esm/src/index.js",
-  "module": "./dist/mjs/src/index.js",
-  "types": "./dist/mjs/src/index.d.ts",
+  "main": "./dist/cjs/src/index.js",
+  "module": "./dist/esm/src/index.js",
+  "types": "./dist/esm/src/index.d.ts",
   "exports": {
     ".": {
       "require": {
-        "default": "./dist/esm/src/index.js",
-        "types": "./dist/esm/src/index.d.ts"
+        "default": "./dist/cjs/src/index.js",
+        "types": "./dist/cjs/src/index.d.ts"
       },
       "import": {
-        "default": "./dist/mjs/src/index.js",
-        "types": "./dist/mjs/src/index.d.ts"
+        "default": "./dist/esm/src/index.js",
+        "types": "./dist/esm/src/index.d.ts"
       }
     },
     "./public-api": {
       "require": {
-        "default": "./dist/esm/src/public-api.js",
-        "types": "./dist/esm/src/public-api.d.ts"
+        "default": "./dist/cjs/src/public-api.js",
+        "types": "./dist/cjs/src/public-api.d.ts"
       },
       "import": {
-        "default": "./dist/mjs/src/public-api.js",
-        "types": "./dist/mjs/src/public-api.d.ts"
+        "default": "./dist/esm/src/public-api.js",
+        "types": "./dist/esm/src/public-api.d.ts"
       }
     }
   },
