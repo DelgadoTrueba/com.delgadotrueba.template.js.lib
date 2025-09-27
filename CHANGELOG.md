@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://github.com/DelgadoTrueba/com.delgadotrueba.template.js.lib/compare/v1.0.0...v1.1.0) (2025-09-27)
+
+
+### Features
+
+* update release please ([a1dbf6f](https://github.com/DelgadoTrueba/com.delgadotrueba.template.js.lib/commit/a1dbf6f155ebcbc8235c2ae4da361b9113a72864))
+* update release please II ([48ee679](https://github.com/DelgadoTrueba/com.delgadotrueba.template.js.lib/commit/48ee6792321855c7701c8cf177d373f54ec6dd99))
+* update release please III ([da5de99](https://github.com/DelgadoTrueba/com.delgadotrueba.template.js.lib/commit/da5de995d5eb98247da9072dcaf8c5b0d1b22acd))
+
 ## 1.0.0 (2025-09-27)
 
 
