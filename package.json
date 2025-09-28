@@ -15,6 +15,7 @@
     "type": "git",
     "url": "https://github.com/delgadotrueba/template-js"
   },
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "build": "pnpm run build:cjs && pnpm run build:mjs && pnpm run postbuild",
     "build:cjs": "tsc -p tsconfig.cjs.json",
