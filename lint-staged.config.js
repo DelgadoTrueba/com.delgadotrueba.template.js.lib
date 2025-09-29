@@ -3,6 +3,7 @@
  * @type {import('lint-staged').Configuration}
  */
 module.exports = {
+  '!src/**/*': ['prettier --write'],
   'src/**/*': ['prettier --check'],
   'src/utils-test/*.ts': ['tsc --noEmit', 'eslint -c .eslintrc.json'],
   'src/**/*.ts': [
