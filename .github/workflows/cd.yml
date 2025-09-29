@@ -1,0 +1,116 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write        # ← necesario para crear/pushear tags
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint, Test & Sonar
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛬
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.11.0 --activate
+
+      - name: Install dependencies 📦
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint 🧹
+        run: pnpm run lint
+
+      - name: Test ✅ (con coverage)
+        env:
+          CI: true
+        run: pnpm run test:coverage
+
+      - name: SonarCloud scan 🔍
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to NPM 🚀
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Leer versión de package.json 🔎
+        id: version
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
+          echo "version=$VER"   >> $GITHUB_OUTPUT
+          echo "major=$MAJOR"   >> $GITHUB_OUTPUT
+          echo "minor=$MINOR"   >> $GITHUB_OUTPUT
+          echo "patch=$PATCH"   >> $GITHUB_OUTPUT
+          echo "VERSION=$VER"   >> $GITHUB_ENV
+          echo "MAJOR=$MAJOR"   >> $GITHUB_ENV
+          echo "MINOR=$MINOR"   >> $GITHUB_ENV
+          echo "PATCH=$PATCH"   >> $GITHUB_ENV
+
+      - name: Commit de release 📝
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add package.json
+          git commit -m "chore(release): v${VERSION}"
+          git push origin HEAD:main
+
+      - name: Crear/actualizar tags 🏷
+        id: tag_version
+        run: |
+          set -e
+          git fetch --tags --force
+          # Config git (necesario en runners limpios)
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          FULL_TAG="v${VERSION}"
+          MAJOR_TAG="v${MAJOR}"
+          MINOR_TAG="v${MAJOR}.${MINOR}"
+
+          # ¿Existe el tag completo remoto?
+          if git rev-parse -q --verify "refs/tags/${FULL_TAG}" >/dev/null; then
+            echo "created=false" >> $GITHUB_OUTPUT
+            echo "El tag ${FULL_TAG} ya existe. No se crea de nuevo."
+          else
+            # Crear tag completo (anotado)
+            git tag -a "${FULL_TAG}" -m "Release ${FULL_TAG}"
+            git push origin "${FULL_TAG}"
+            echo "created=true" >> $GITHUBOUTPUT  # legacy typo guard
+            echo "created=true" >> $GITHUB_OUTPUT
+            echo "Creado ${FULL_TAG}."
+          fi
+
+          # (Re)apuntar tags flotantes mayor y mayor.menor al commit actual
+          # borrar si existen y recrear anotados
+          for T in "${MAJOR_TAG}" "${MINOR_TAG}"; do
+            git tag -d "$T" 2>/dev/null || true
+            git push origin ":refs/tags/$T" 2>/dev/null || true
+            git tag -a "$T" -m "Release $T -> ${FULL_TAG}"
+            git push origin "$T" --force
+            echo "Actualizado $T -> ${FULL_TAG}"
+          done
