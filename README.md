@@ -62,7 +62,7 @@ MIT
 [package-image]: https://img.shields.io/github/package-json/v/delgadotrueba/com.delgadotrueba.template.js.lib?label=version&logo=github
 [package-url]: https://github.com/users/delgadotrueba/packages/npm/package/com.delgadotrueba.template.js.lib
 [registry-image]: https://img.shields.io/badge/registry-github%20packages-black?logo=github
-[registry-url]: https://github.com/DelgadoTrueba/com.delgadotrueba.react.config/pkgs/npm/template-ts
+[registry-url]: https://github.com/DelgadoTrueba/com.delgadotrueba.template.js.lib/pkgs/npm/template-ts
 [license-image]: https://img.shields.io/github/license/delgadotrueba/com.delgadotrueba.template.js.lib
 [license-url]: LICENSE.md
 [sonar-summary]: https://sonarcloud.io/summary/new_code?id=DelgadoTrueba_com.delgadotrueba.template.js.lib
