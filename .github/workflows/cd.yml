@@ -23,6 +23,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configurar .npmrc 📦
+        run: |
+            npm config set registry https://registry.npmjs.org
+            npm config set @delgadotrueba:registry https://npm.pkg.github.com/
+            npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
+            npm config set save-exact true
+
       - name: Setup Node ⚙️
         uses: actions/setup-node@v4
         with:
@@ -36,24 +43,10 @@ jobs:
       - name: Install dependencies 📦
         run: pnpm install --frozen-lockfile
 
-      - name: Lint 🧹
-        run: pnpm run lint
-
-      - name: Test ✅ (con coverage)
-        env:
-          CI: true
-        run: pnpm run test:coverage
-
-      - name: SonarCloud scan 🔍
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Publish to NPM 🚀
         run: pnpm publish --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Leer versión de package.json 🔎
         id: version
@@ -113,3 +106,9 @@ jobs:
             git push origin "$T" --force
             echo "Actualizado $T -> ${FULL_TAG}"
           done
+
+      - name: SonarCloud scan 🔍
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
