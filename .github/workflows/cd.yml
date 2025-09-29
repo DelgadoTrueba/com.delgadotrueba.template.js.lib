@@ -25,6 +25,7 @@ jobs:
 
       - name: Configurar .npmrc 📦
         run: |
+            rm -f .npmrc
             npm config set registry https://registry.npmjs.org
             npm config set @delgadotrueba:registry https://npm.pkg.github.com/
             npm config set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
