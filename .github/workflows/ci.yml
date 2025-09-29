@@ -1,12 +1,15 @@
 name: CI
 
 on:
+  push:
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
     types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -14,18 +17,21 @@ concurrency:
 
 jobs:
   ci:
-    name: Lint & Test
+    name: Lint, Test & Sonar
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.draft == false }}
+    # No ejecutes si la PR es borrador (en push no hay drafts)
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
 
     steps:
       - name: Checkout 🛬
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node ⚙️
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.19.0
 
       - name: Enable pnpm
         run: |
@@ -38,14 +44,14 @@ jobs:
       - name: Lint 🧹
         run: pnpm run lint
 
-      - name: Test ✅
+      - name: Test ✅ (con coverage)
         env:
           CI: true
         run: pnpm run test:coverage
 
       - name: SonarCloud scan
-        uses: SonarSource/sonarqube-scan-action@v6.0.0
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          args: -Dproject.settings=sonar-project.properties

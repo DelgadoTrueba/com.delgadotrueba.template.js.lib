@@ -32,7 +32,8 @@
     "test:mjs": "jest -c jest.mjs.config.js --verbose",
     "test:coverage": "jest --projects jest.cjs.config.js jest.mjs.config.js --coverage",
     "prepare": "husky",
-    "prepublishOnly": "pnpm run lint && pnpm run test && pnpm run build"
+    "prepublishOnly": "pnpm run lint && pnpm run test && pnpm run build",
+    "postpublish": "node ./scripts/update-version"
   },
   "devDependencies": {
     "@commitlint/cli": "20.0.0",
