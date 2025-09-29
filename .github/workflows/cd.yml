@@ -5,9 +5,9 @@ on:
     branches: [main]
 
 permissions:
-  contents: write       # ← necesario para crear/pushear tags
+  contents: write # ← necesario para crear/pushear tags
   pull-requests: read
-  packages: write       # publicar en GitHub Packages
+  packages: write # publicar en GitHub Packages
 
 concurrency:
   group: ci-${{ github.ref }}
