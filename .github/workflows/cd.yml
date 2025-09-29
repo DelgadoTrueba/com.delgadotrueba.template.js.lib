@@ -46,15 +46,6 @@ jobs:
         env:
           PKG_TOKEN: ${{ secrets.PKG_TOKEN }}
 
-      - name: Publish to NPM 🚀
-        run: pnpm publish --no-git-checks
-
-      - name: SonarCloud scan 🔍
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Leer versión de package.json 🔎
         id: version
         run: |
@@ -68,15 +59,6 @@ jobs:
           echo "MAJOR=$MAJOR"   >> $GITHUB_ENV
           echo "MINOR=$MINOR"   >> $GITHUB_ENV
           echo "PATCH=$PATCH"   >> $GITHUB_ENV
-
-      - name: Commit de release 📝
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add package.json
-          git commit -m "chore(release): v${VERSION}"
-          git push origin HEAD:main
 
       - name: Crear/actualizar tags 🏷️
         id: tag_version
@@ -106,6 +88,24 @@ jobs:
             git push origin "$T" --force
             echo "Actualizado $T -> $FULL_TAG"
           done
+
+      - name: Publish to NPM 🚀
+        run: pnpm publish --no-git-checks
+
+      - name: SonarCloud scan 🔍
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit de release 📝
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add package.json
+          git commit -m "chore(release): v${VERSION}"
+          git push origin HEAD:main
 
       - name: Merge main → develop 🔀
         run: |
