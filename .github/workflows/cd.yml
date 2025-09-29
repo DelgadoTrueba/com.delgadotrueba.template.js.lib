@@ -23,12 +23,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: SonarCloud scan 🔍
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Setup Node ⚙️
         uses: actions/setup-node@v4
         with:
@@ -54,6 +48,12 @@ jobs:
 
       - name: Publish to NPM 🚀
         run: pnpm publish --no-git-checks
+
+      - name: SonarCloud scan 🔍
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Leer versión de package.json 🔎
         id: version
@@ -124,3 +124,5 @@ jobs:
 
           # Empuja develop actualizado
           git push origin HEAD:develop
+
+
