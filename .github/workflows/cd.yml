@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write        # ← necesario para crear/pushear tags
+  contents: write # ← necesario para crear/pushear tags
   pull-requests: read
 
 concurrency:
@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   ci:
-    name: Lint, Test & Sonar
+    name: Lint, Test, Sonar and Publish
     runs-on: ubuntu-latest
 
     steps:
