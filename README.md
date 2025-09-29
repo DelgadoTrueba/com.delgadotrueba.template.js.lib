@@ -2,8 +2,10 @@
 
 > description
 
-[![NPM version][npm-image]][npm-url]
-[![NPM downloads][downloads-image]][downloads-url]
+[![Version][package-image]][package-url]
+[![Registry][registry-image]][registry-url]
+[![Quality Gate Status][sonar-qg-image]][sonar-summary]
+[![Coverage][sonar-cov-image]][sonar-summary]
 [![License][license-image]][license-url]
 
 ## Build
@@ -12,21 +14,21 @@ Guide to Developing the Library
 
 ```
 nvm use v21.7.3
-npm i
+pnpm i
 
 # Available Scripts
-npm run build
-npm run lint
-npm run test
+pnpm run build
+pnpm run lint
+pnpm run test
 ```
 
 How to Manually Publish the Libray
 
 ```
 nvm use v21.7.3
-npm i
+pnpm i
 
-npm publish
+pnpm publish
 ```
 
 ## Installation
@@ -42,13 +44,13 @@ npm install @delgadotrueba/template-js --save
 ### Commonjs
 
 ```js
-
+const { sum } = require('@delgadotrueba/template-ts');
 ```
 
 ### ESM
 
 ```js
-
+import { sum } from '@delgadotrueba/template-ts';
 ```
 
 ## Usage
@@ -57,9 +59,12 @@ npm install @delgadotrueba/template-js --save
 
 MIT
 
-[npm-image]: https://img.shields.io/npm/v/%40delgadotrueba%template-js
-[npm-url]: https://www.npmjs.com/package/@delgadotrueba/template-js
-[downloads-image]: https://img.shields.io/npm/dy/%40delgadotrueba%template-js
-[downloads-url]: https://www.npmjs.com/package/@delgadotrueba/template-js
-[license-image]: http://img.shields.io/npm/l/%40delgadotrueba%template-js.svg?style=flat
+[package-image]: https://img.shields.io/github/package-json/v/delgadotrueba/com.delgadotrueba.template.js.lib?label=version&logo=github
+[package-url]: https://github.com/users/delgadotrueba/packages/npm/package/com.delgadotrueba.template.js.lib
+[registry-image]: https://img.shields.io/badge/registry-github%20packages-black?logo=github
+[registry-url]: https://github.com/DelgadoTrueba/com.delgadotrueba.react.config/pkgs/npm/template-ts
+[license-image]: https://img.shields.io/github/license/delgadotrueba/com.delgadotrueba.template.js.lib
 [license-url]: LICENSE.md
+[sonar-summary]: https://sonarcloud.io/summary/new_code?id=DelgadoTrueba_com.delgadotrueba.template.js.lib
+[sonar-qg-image]: https://sonarcloud.io/api/project_badges/measure?project=DelgadoTrueba_com.delgadotrueba.template.js.lib&metric=alert_status
+[sonar-cov-image]: https://sonarcloud.io/api/project_badges/measure?project=DelgadoTrueba_com.delgadotrueba.template.js.lib&metric=coverage

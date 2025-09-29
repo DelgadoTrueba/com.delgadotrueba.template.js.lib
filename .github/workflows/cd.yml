@@ -23,6 +23,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: SonarCloud scan 🔍
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Node ⚙️
         uses: actions/setup-node@v4
         with:
@@ -101,8 +107,20 @@ jobs:
             echo "Actualizado $T -> $FULL_TAG"
           done
 
-      - name: SonarCloud scan 🔍
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge main → develop 🔀
+        run: |
+          set -e
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Trae ambas ramas del remoto
+          git fetch origin main develop --prune
+
+          # Crear/actualizar rama local desde el remoto
+          git checkout -B develop origin/develop
+
+          # Mezcla los últimos cambios de main en develop
+          git merge --no-ff --no-edit origin/main
+
+          # Empuja develop actualizado
+          git push origin HEAD:develop
