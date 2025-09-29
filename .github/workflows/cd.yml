@@ -7,7 +7,6 @@ on:
 permissions:
   contents: write # ← necesario para crear/pushear tags
   pull-requests: read
-  packages: write # publicar en GitHub Packages
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -42,7 +41,7 @@ jobs:
           rm -f .npmrc
           npm config set registry https://registry.npmjs.org
           npm config set @delgadotrueba:registry https://npm.pkg.github.com/
-          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.PKG_TOKEN }}
           npm config set save-exact true
 
       - name: Publish to NPM 🚀
