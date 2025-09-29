@@ -72,12 +72,11 @@ jobs:
           git commit -m "chore(release): v${VERSION}"
           git push origin HEAD:main
 
-      - name: Crear/actualizar tags 🏷
+      - name: Crear/actualizar tags 🏷️
         id: tag_version
         run: |
           set -e
           git fetch --tags --force
-          # Config git (necesario en runners limpios)
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
@@ -85,27 +84,21 @@ jobs:
           MAJOR_TAG="v${MAJOR}"
           MINOR_TAG="v${MAJOR}.${MINOR}"
 
-          # ¿Existe el tag completo remoto?
           if git rev-parse -q --verify "refs/tags/${FULL_TAG}" >/dev/null; then
-            echo "created=false" >> $GITHUB_OUTPUT
-            echo "El tag ${FULL_TAG} ya existe. No se crea de nuevo."
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            echo "El tag ${FULL_TAG} ya existe, no se crea de nuevo."
           else
-            # Crear tag completo (anotado)
-            git tag -a "${FULL_TAG}" -m "Release ${FULL_TAG}"
-            git push origin "${FULL_TAG}"
-            echo "created=true" >> $GITHUBOUTPUT  # legacy typo guard
-            echo "created=true" >> $GITHUB_OUTPUT
-            echo "Creado ${FULL_TAG}."
+            git tag -a "$FULL_TAG" -m "Release $FULL_TAG"
+            git push origin "$FULL_TAG"
+            echo "created=true" >> "$GITHUB_OUTPUT"
+            echo "Creado $FULL_TAG."
           fi
 
-          # (Re)apuntar tags flotantes mayor y mayor.menor al commit actual
-          # borrar si existen y recrear anotados
-          for T in "${MAJOR_TAG}" "${MINOR_TAG}"; do
-            git tag -d "$T" 2>/dev/null || true
-            git push origin ":refs/tags/$T" 2>/dev/null || true
-            git tag -a "$T" -m "Release $T -> ${FULL_TAG}"
+          # (Re)apuntar tags flotantes siempre al commit actual
+          for T in "$MAJOR_TAG" "$MINOR_TAG"; do
+            git tag -fa "$T" -m "Release $T -> $FULL_TAG"
             git push origin "$T" --force
-            echo "Actualizado $T -> ${FULL_TAG}"
+            echo "Actualizado $T -> $FULL_TAG"
           done
 
       - name: SonarCloud scan 🔍
