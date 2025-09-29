@@ -41,8 +41,10 @@ jobs:
           rm -f .npmrc
           npm config set registry https://registry.npmjs.org
           npm config set @delgadotrueba:registry https://npm.pkg.github.com/
-          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.PKG_TOKEN }}
+          npm config set //npm.pkg.github.com/:_authToken=${secrets.PKG_TOKEN}
           npm config set save-exact true
+        env:
+          PKG_TOKEN: ${{ secrets.PKG_TOKEN }}
 
       - name: Publish to NPM 🚀
         run: pnpm publish --no-git-checks
