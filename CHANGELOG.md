@@ -1,5 +1,7 @@
 # Changelog
 
+### Release version <version 0.0.3>
+
 ### Create scaffolding #1
 
 - chore: 🏗️ add sonar
