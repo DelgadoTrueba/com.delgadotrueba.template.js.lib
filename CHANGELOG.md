@@ -2,6 +2,7 @@
 
 ### Create scaffolding #1
 
+- chore: 🏗️ add sonar
 - chore: 🏗️ add release-please
 - chore: 🏗️ add test coverage
 - chore: 🏗️ add jest.config.ts
