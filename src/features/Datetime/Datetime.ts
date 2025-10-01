@@ -4,84 +4,138 @@ import type {
   FormatDateOptions,
 } from './Datetime.types';
 
-export const createDateFormatter = (
-  { locale, timezone }: FormatDateOptions = {
-    timezone: 'Europe/Madrid',
-    locale: 'es-ES',
-  },
-) => {
-  const getFormattedPart = (
-    date: Date,
-    config?: Intl.DateTimeFormatOptions,
-  ): string => {
-    return new Intl.DateTimeFormat(locale, {
-      timeZone: timezone,
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Formatter
+
+const DEFAULT_FORMAT_OPTIONS: FormatDateOptions = {
+  timezone: 'Europe/Madrid',
+  locale: 'es-ES',
+};
+
+const createGetFormattedPart =
+  (format: FormatDateOptions = DEFAULT_FORMAT_OPTIONS) =>
+  (date: Date, config?: Intl.DateTimeFormatOptions): string => {
+    return new Intl.DateTimeFormat(format.locale, {
+      timeZone: format.timezone,
       ...config,
     }).format(date);
   };
 
-  return (date: Date, format: DateFormat): string => {
-    // Helper to get 24h hour normalized to 00-23 to avoid engines returning "24" at midnight
-    const getHour24TwoDigits = (): string => {
-      try {
-        const parts = new Intl.DateTimeFormat(locale, {
-          timeZone: timezone,
-          hour: '2-digit',
-          hour12: false,
-          hourCycle: 'h23',
-        }).formatToParts(date);
-        const hourStr = parts.find((p) => p.type === 'hour')?.value;
-        if (hourStr != null) {
-          const num = parseInt(hourStr, 10);
-          if (!Number.isNaN(num)) {
-            // Normalize possible 24 to 00 using modulo 24
-            return String(num % 24).padStart(2, '0');
-          }
-        }
-      } catch {
-        // ignore and use fallback
-      }
-      // Fallback to previous behavior but normalize "24" explicitly
-      const raw = getFormattedPart(date, {
-        hour: '2-digit',
-        hour12: false,
-      }).split(' ')[0];
-      return raw === '24' ? '00' : raw;
-    };
+export const createDateFormatter = (
+  format: FormatDateOptions = DEFAULT_FORMAT_OPTIONS,
+) => {
+  const getFormattedPart = createGetFormattedPart(format);
 
+  const getFullYear = (
+    date: Date = new Date(),
+    getFormattedPart: ReturnType<typeof createGetFormattedPart>,
+  ): string => {
+    return getFormattedPart(date, { year: 'numeric' });
+  };
+
+  const getShortYear = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { year: '2-digit' });
+  };
+
+  const getFullMonthName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { month: 'long' });
+  };
+
+  const getShortMonthName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { month: 'short' });
+  };
+
+  const getFullMonthNumber = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { month: '2-digit' });
+  };
+
+  const getFullDayNumber = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { day: '2-digit' });
+  };
+
+  const getFullWeekdayName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { weekday: 'long' });
+  };
+
+  const getShortWeekdayName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { weekday: 'short' });
+  };
+
+  // Helper to get 24h hour normalized to 00-23 to avoid engines returning "24" at midnight
+  const getHour24 = (date: Date = new Date()): string => {
+    const raw = getFormattedPart(date, {
+      hour: '2-digit',
+      hour12: false,
+    }).split(' ')[0];
+    return raw === '24' ? '00' : raw;
+  };
+
+  const getHour12 = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { hour: '2-digit', hour12: true }).split(
+      ' ',
+    )[0];
+  };
+
+  const getMinutes = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { minute: '2-digit' });
+  };
+
+  const getMilliseconds = (date: Date = new Date()): string => {
+    return date.getMilliseconds().toString().padStart(3, '0');
+  };
+
+  const getSeconds = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { second: '2-digit' });
+  };
+
+  const getMeridiem = (date: Date = new Date()) => {
+    return getFormattedPart(date, { hour: '2-digit', hour12: true }).includes(
+      'AM',
+    )
+      ? 'AM'
+      : 'PM';
+  };
+
+  const getMeridiemLower = (date: Date = new Date()) => {
+    return getMeridiem(date).toLowerCase();
+  };
+
+  const getTimestamp = (date: Date = new Date()): string => {
+    return Math.floor(date.getTime() / 1000).toString();
+  };
+
+  const getTimestampMilliseconds = (date: Date = new Date()): string => {
+    return date.getTime().toString();
+  };
+
+  const getISOString = (date: Date = new Date()): string => {
+    return date.toISOString();
+  };
+
+  return (date: Date, format: DateFormat): string => {
     const formatsMap: Record<string, () => string> = {
       // Los formatos siempre de mayor especifidad a menos p.ej MMMM (mes completo) > MMM (mes corto) > MM (mes)
       // Formatos de fecha
-      YYYY: () => getFormattedPart(date, { year: 'numeric' }),
-      YY: () => getFormattedPart(date, { year: '2-digit' }),
-      DD: () => getFormattedPart(date, { day: '2-digit' }),
-      dddd: () => getFormattedPart(date, { weekday: 'long' }),
-      ddd: () => getFormattedPart(date, { weekday: 'short' }),
-      MMMM: () => getFormattedPart(date, { month: 'long' }),
-      MMM: () => getFormattedPart(date, { month: 'short' }),
-      MM: () => getFormattedPart(date, { month: '2-digit' }),
+      YYYY: () => getFullYear(date),
+      YY: () => getShortYear(date),
+      MMMM: () => getFullMonthName(date),
+      MMM: () => getShortMonthName(date),
+      MM: () => getFullMonthNumber(date),
+      DD: () => getFullDayNumber(date),
+      dddd: () => getFullWeekdayName(date),
+      ddd: () => getShortWeekdayName(date),
       // Formatos de tiempo
-      HH: () => getHour24TwoDigits(),
-      hh: () =>
-        getFormattedPart(date, { hour: '2-digit', hour12: true }).split(' ')[0],
-      mm: () => getFormattedPart(date, { minute: '2-digit' }),
-      sss: () => {
-        return date.getMilliseconds().toString().padStart(3, '0');
-      },
-      ss: () => getFormattedPart(date, { second: '2-digit' }),
-      A: () =>
-        getFormattedPart(date, { hour: '2-digit', hour12: true }).includes('AM')
-          ? 'AM'
-          : 'PM',
-      a: () =>
-        getFormattedPart(date, { hour: '2-digit', hour12: true }).includes('AM')
-          ? 'am'
-          : 'pm',
+      HH: () => getHour24(date),
+      hh: () => getHour12(date),
+      mm: () => getMinutes(date),
+      sss: () => getMilliseconds(date),
+      ss: () => getSeconds(date),
+      A: () => getMeridiem(date),
+      a: () => getMeridiemLower(date),
       // Timestamps
-      X: () => Math.floor(date.getTime() / 1000).toString(),
-      x: () => date.getTime().toString(),
+      X: () => getTimestamp(date),
+      x: () => getTimestampMilliseconds(date),
       // ISO_8601 = YYYY-MM-DDTHH:mm:ss.sssZ
-      ISO_8601: () => date.toISOString(),
+      ISO_8601: () => getISOString(date),
     };
 
     // Dividir el string en segmentos usando corchetes como delimitadores
@@ -110,109 +164,15 @@ export const createDateFormatter = (
   };
 };
 
-export const formatDate = createDateFormatter({
-  timezone: 'Europe/Madrid',
-  locale: 'es-ES',
-});
+export const formatDate = createDateFormatter(DEFAULT_FORMAT_OPTIONS);
 
-export const addDays = (date: Date, days: number): Date => {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-};
-
-export const subtractDays = (date: Date, days: number): Date => {
-  return addDays(date, -days);
-};
-
-export const differenceInDays = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
-
-export const isWeekend = (date: Date): boolean => {
-  const day = date.getDay();
-  return day === 0 || day === 6;
-};
-
-export const isLeapYear = (year: number): boolean => {
-  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
-};
-
-export const isSameDay = (date1: Date, date2: Date): boolean => {
-  return date1.toDateString() === date2.toDateString();
-};
-
-export const getDaysInMonth = (year: number, month: number): number => {
-  return new Date(year, month + 1, 0).getDate();
-};
-
-export const getFirstDayOfMonth = (year: number, month: number): number => {
-  return new Date(year, month, 1).getDay();
-};
-
-export const getLastDayOfMonth = (year: number, month: number): number => {
-  return new Date(year, month + 1, 0).getDay();
-};
-
-export const getMonthName = (
-  month: number,
+// TODOS ESTOS DE ARRAY REVISAR
+export const getShortMonthsArray = (
   countrieType: DateCountry = 'es-ES',
-): string => {
-  // Convert 1-based month (1=January, 7=July) to 0-based for JavaScript Date
-  return new Intl.DateTimeFormat(countrieType, { month: 'long' }).format(
-    new Date(2000, month - 1),
-  );
-};
-
-export const getShortMonthName = (
-  month: number,
-  countrieType: DateCountry = 'es-ES',
-): string => {
-  // Convert 1-based month (1=January, 7=July) to 0-based for JavaScript Date
-  return new Intl.DateTimeFormat(countrieType, { month: 'short' }).format(
-    new Date(2000, month - 1),
-  );
-};
-
-export const getWeekdayName = (
-  day: number,
-  countrieType: DateCountry = 'es-ES',
-): string => {
-  // Convert 1-based weekday (1=Monday, 7=Sunday) to JavaScript day
-  // Use a known Monday as reference: January 4, 2021 was a Monday
-  const mondayReference = new Date(2021, 0, 4); // Known Monday
-  const daysToAdd = (day === 7 ? 0 : day) - 1; // Sunday=0, Monday=1, etc.
-  const targetDate = new Date(mondayReference);
-  targetDate.setDate(mondayReference.getDate() + daysToAdd);
-
-  return new Intl.DateTimeFormat(countrieType, { weekday: 'long' }).format(
-    targetDate,
-  );
-};
-
-export const getShortWeekdayName = (
-  day: number,
-  countrieType: DateCountry = 'es-ES',
-): string => {
-  // Convert 1-based weekday (1=Monday, 7=Sunday) to JavaScript day
-  const mondayReference = new Date(2021, 0, 4); // Known Monday
-  const daysToAdd = (day === 7 ? 0 : day) - 1; // Sunday=0, Monday=1, etc.
-  const targetDate = new Date(mondayReference);
-  targetDate.setDate(mondayReference.getDate() + daysToAdd);
-
-  return new Intl.DateTimeFormat(countrieType, { weekday: 'short' }).format(
-    targetDate,
-  );
-};
-
-export const getDaysArray = (year: number, month: number): Date[] => {
-  const daysInMonth = getDaysInMonth(year, month);
-  const days = [];
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push(new Date(year, month, i));
-  }
-  return days;
+): string[] => {
+  return Array.from({ length: 12 }, (_, i) =>
+    getShortMonthName(i + 1, countrieType),
+  ); // 1-based months
 };
 
 export const getMonthsArray = (
@@ -220,14 +180,6 @@ export const getMonthsArray = (
 ): string[] => {
   return Array.from({ length: 12 }, (_, i) =>
     getMonthName(i + 1, countrieType),
-  ); // 1-based months
-};
-
-export const getShortMonthsArray = (
-  countrieType: DateCountry = 'es-ES',
-): string[] => {
-  return Array.from({ length: 12 }, (_, i) =>
-    getShortMonthName(i + 1, countrieType),
   ); // 1-based months
 };
 
@@ -249,6 +201,27 @@ export const getShortWeekdaysArray = (
 
 export const getYearsArray = (start: number, end: number): number[] => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+};
+
+export const getDaysArray = (year: number, month: number): Date[] => {
+  const daysInMonth = getDaysInMonth(year, month);
+  const days = [];
+  for (let i = 1; i <= daysInMonth; i++) {
+    days.push(new Date(year, month, i));
+  }
+  return days;
+};
+
+// Todo lo que sea sumar hacerlo con otra API
+
+export const addDays = (date: Date, days: number): Date => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
+
+export const subtractDays = (date: Date, days: number): Date => {
+  return addDays(date, -days);
 };
 
 export const addHours = (date: Date, hours: number): Date => {
@@ -280,6 +253,96 @@ export const addYears = (date: Date, years: number): Date => {
   result.setFullYear(result.getFullYear() + years);
   return result;
 };
+
+export const differenceInHours = (date1: Date, date2: Date): number => {
+  const diffTime = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(diffTime / (1000 * 60 * 60));
+};
+
+export const differenceInMinutes = (date1: Date, date2: Date): number => {
+  const diffTime = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(diffTime / (1000 * 60));
+};
+
+export const differenceInSeconds = (date1: Date, date2: Date): number => {
+  const diffTime = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(diffTime / 1000);
+};
+
+export const differenceInDays = (date1: Date, date2: Date): number => {
+  const diffTime = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
+
+export const differenceInMonths = (date1: Date, date2: Date): number => {
+  const years = date2.getFullYear() - date1.getFullYear();
+  const months = date2.getMonth() - date1.getMonth();
+  return years * 12 + months;
+};
+
+export const differenceInYears = (date1: Date, date2: Date): number => {
+  return date2.getFullYear() - date1.getFullYear();
+};
+
+export const age = (
+  birthDate: Date,
+  referenceDate: Date = new Date(),
+): number => {
+  let age = referenceDate.getFullYear() - birthDate.getFullYear();
+  const monthDiff = referenceDate.getMonth() - birthDate.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && referenceDate.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+
+  return age;
+};
+
+export const timeAgo = (date: Date, locale: string = 'en-US'): string => {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+
+  if (diffYears > 0) return rtf.format(-diffYears, 'year');
+  if (diffMonths > 0) return rtf.format(-diffMonths, 'month');
+  if (diffWeeks > 0) return rtf.format(-diffWeeks, 'week');
+  if (diffDays > 0) return rtf.format(-diffDays, 'day');
+  if (diffHours > 0) return rtf.format(-diffHours, 'hour');
+  if (diffMins > 0) return rtf.format(-diffMins, 'minute');
+  return rtf.format(-diffSecs, 'second');
+};
+
+// Refactor
+
+export const isSameDay = (date1: Date, date2: Date): boolean => {
+  return date1.toDateString() === date2.toDateString();
+};
+
+export const parseDate = (dateString: string): Date | null => {
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date;
+};
+
+export const isValidDate = (date: unknown): boolean => {
+  return date instanceof Date && !isNaN(date.getTime());
+};
+
+export const fromTimestamp = (timestamp: number): Date => {
+  return new Date(timestamp);
+};
+
+// Last first
 
 export const startOfDay = (date: Date): Date => {
   const result = new Date(date);
@@ -351,90 +414,35 @@ export const endOfQuarter = (date: Date): Date => {
   return endOfDay(result);
 };
 
-export const differenceInHours = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60));
+export const getDaysInMonth = (year: number, month: number): number => {
+  return new Date(year, month + 1, 0).getDate();
 };
 
-export const differenceInMinutes = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / (1000 * 60));
+export const getFirstDayOfMonth = (year: number, month: number): number => {
+  return new Date(year, month, 1).getDay();
 };
 
-export const differenceInSeconds = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / 1000);
+export const getLastDayOfMonth = (year: number, month: number): number => {
+  return new Date(year, month + 1, 0).getDay();
 };
 
-export const differenceInMonths = (date1: Date, date2: Date): number => {
-  const years = date2.getFullYear() - date1.getFullYear();
-  const months = date2.getMonth() - date1.getMonth();
-  return years * 12 + months;
+export const isLastDayOfMonth = (date: Date): boolean => {
+  return date.getDate() === getDaysInMonth(date.getFullYear(), date.getMonth());
 };
 
-export const differenceInYears = (date1: Date, date2: Date): number => {
-  return date2.getFullYear() - date1.getFullYear();
+export const isFirstDayOfMonth = (date: Date): boolean => {
+  return date.getDate() === 1;
 };
 
-export const age = (
-  birthDate: Date,
-  referenceDate: Date = new Date(),
-): number => {
-  let age = referenceDate.getFullYear() - birthDate.getFullYear();
-  const monthDiff = referenceDate.getMonth() - birthDate.getMonth();
-
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && referenceDate.getDate() < birthDate.getDate())
-  ) {
-    age--;
-  }
-
-  return age;
+export const isLastMonth = (date: Date): boolean => {
+  return date.getMonth() === 11;
 };
 
-export const timeAgo = (date: Date, locale: string = 'en-US'): string => {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSecs = Math.floor(diffMs / 1000);
-  const diffMins = Math.floor(diffSecs / 60);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-  const diffWeeks = Math.floor(diffDays / 7);
-  const diffMonths = Math.floor(diffDays / 30);
-  const diffYears = Math.floor(diffDays / 365);
-
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
-
-  if (diffYears > 0) return rtf.format(-diffYears, 'year');
-  if (diffMonths > 0) return rtf.format(-diffMonths, 'month');
-  if (diffWeeks > 0) return rtf.format(-diffWeeks, 'week');
-  if (diffDays > 0) return rtf.format(-diffDays, 'day');
-  if (diffHours > 0) return rtf.format(-diffHours, 'hour');
-  if (diffMins > 0) return rtf.format(-diffMins, 'minute');
-  return rtf.format(-diffSecs, 'second');
+export const isFirstMonth = (date: Date): boolean => {
+  return date.getMonth() === 0;
 };
 
-export const parseDate = (dateString: string): Date | null => {
-  const date = new Date(dateString);
-  return isNaN(date.getTime()) ? null : date;
-};
-
-export const isValidDate = (date: unknown): boolean => {
-  return date instanceof Date && !isNaN(date.getTime());
-};
-
-export const toISOString = (date: Date): string => {
-  return date.toISOString();
-};
-
-export const fromTimestamp = (timestamp: number): Date => {
-  return new Date(timestamp);
-};
-
-export const toTimestamp = (date: Date): number => {
-  return date.getTime();
-};
+// Numero de semana y dia
 
 export const getWeekNumber = (date: Date): number => {
   const target = new Date(date.valueOf());
@@ -453,6 +461,8 @@ export const getDayOfYear = (date: Date): number => {
   const diff = date.getTime() - start.getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 };
+
+// Rangos temporales
 
 export const getWeeksInMonth = (date: Date): number => {
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -515,21 +525,7 @@ export const isBetween = (
   return date >= startDate && date <= endDate;
 };
 
-export const isWeekendDay = (date: Date): boolean => {
-  return date.getDay() === 0 || date.getDay() === 6;
-};
-
-export const isWeekendDate = (date: Date): boolean => {
-  return isWeekendDay(date);
-};
-
-export const isWeekday = (date: Date): boolean => {
-  return !isWeekendDay(date);
-};
-
-export const isWeekdayEnd = (date: Date): boolean => {
-  return isWeekday(date);
-};
+//Dias de la semana
 
 export const isMonday = (date: Date): boolean => {
   return date.getDay() === 1;
@@ -559,26 +555,16 @@ export const isSunday = (date: Date): boolean => {
   return date.getDay() === 0;
 };
 
-export const isLastDayOfMonth = (date: Date): boolean => {
-  return date.getDate() === getDaysInMonth(date.getFullYear(), date.getMonth());
+export const isWeekend = (date: Date): boolean => {
+  const day = date.getDay();
+  return day === 0 || day === 6;
 };
 
-export const isFirstDayOfMonth = (date: Date): boolean => {
-  return date.getDate() === 1;
+export const isWeekday = (date: Date): boolean => {
+  return !isWeekend(date);
 };
 
-export const isLastMonth = (date: Date): boolean => {
-  return date.getMonth() === 11;
-};
-
-export const isFirstMonth = (date: Date): boolean => {
-  return date.getMonth() === 0;
-};
-
-export const isLastYear = (date: Date): boolean => {
-  return date.getFullYear() === 9999;
-};
-
-export const isFirstYear = (date: Date): boolean => {
-  return date.getFullYear() === 1000;
+// año visiesto
+export const isLeapYear = (year: number): boolean => {
+  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 };

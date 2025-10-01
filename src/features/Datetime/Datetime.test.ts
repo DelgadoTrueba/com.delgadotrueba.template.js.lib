@@ -36,10 +36,7 @@ import {
 
   // Weekend/weekday checks
   isWeekend,
-  isWeekendDay,
-  isWeekendDate,
   isWeekday,
-  isWeekdayEnd,
 
   // Date type checks
   isToday,
@@ -74,8 +71,6 @@ import {
   isLastDayOfMonth,
   isFirstMonth,
   isLastMonth,
-  isFirstYear,
-  isLastYear,
 
   // Various getters
   getDayOfYear,
@@ -802,22 +797,9 @@ describe('Datetime', () => {
       expect(isWeekend(testDate2)).toBe(false); // Friday
     });
 
-    test('isWeekendDay - alias for isWeekend', () => {
-      expect(isWeekendDay(testDate)).toBe(true); // Sunday
-    });
-
-    test('isWeekendDate - alias for isWeekend', () => {
-      expect(isWeekendDate(testDate)).toBe(true); // Sunday
-    });
-
     test('isWeekday - checks if date is weekday', () => {
       expect(isWeekday(testDate)).toBe(false); // Sunday
       expect(isWeekday(testDate2)).toBe(true); // Friday
-    });
-
-    test('isWeekdayEnd - checks if date is weekday end', () => {
-      expect(isWeekdayEnd(testDate)).toBe(false); // Sunday is not a weekday end
-      expect(isWeekdayEnd(testDate2)).toBe(true); // Friday is weekday end
     });
   });
 
@@ -918,19 +900,6 @@ describe('Datetime', () => {
       const december = new Date('2023-12-15');
       expect(isLastMonth(december)).toBe(true);
       expect(isLastMonth(testDate)).toBe(false);
-    });
-
-    test('isFirstYear - checks if date is in first year (year 1000)', () => {
-      // JavaScript Date constructor interprets "1000-01-01" as year 999
-      const firstYear = new Date(1000, 0, 1); // Use constructor with year 1000
-      expect(isFirstYear(firstYear)).toBe(true);
-      expect(isFirstYear(testDate)).toBe(false); // 2023 is not year 1000
-    });
-
-    test('isLastYear - checks if date is in last year (year 9999)', () => {
-      const lastYear = new Date('9999-01-01');
-      expect(isLastYear(lastYear)).toBe(true);
-      expect(isLastYear(testDate)).toBe(false); // 2023 is not year 9999
     });
   });
 
