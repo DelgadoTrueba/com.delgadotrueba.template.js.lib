@@ -471,4 +471,9 @@ export type FormatDateOptions = {
   locale: DateCountry;
 };
 
+export type GetFormattedPart = (
+  date: Date,
+  config?: Intl.DateTimeFormatOptions | undefined,
+) => string;
+
 export type DateFormat = 'ISO_8601' | string;
