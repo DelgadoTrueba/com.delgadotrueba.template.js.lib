@@ -4,8 +4,8 @@ on:
   pull_request:
     branches: [develop]
     types: [opened, synchronize, reopened, ready_for_review]
-  push:
-    branches: [develop]
+  # push:
+  #   branches: [develop]
 
 permissions:
   contents: read
