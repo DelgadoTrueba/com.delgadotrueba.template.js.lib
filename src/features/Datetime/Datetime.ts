@@ -1,8 +1,9 @@
 import type {
-  DateCountry,
   DateFormat,
+  DateUTC,
+  DateUTCParts,
+  DateUTCPartsWithDelta,
   FormatDateOptions,
-  GetFormattedPart,
 } from './Datetime.types';
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Formatter
@@ -12,233 +13,127 @@ const DEFAULT_FORMAT_OPTIONS: FormatDateOptions = {
   locale: 'es-ES',
 };
 
-const createGetFormattedPart =
-  (format: FormatDateOptions = DEFAULT_FORMAT_OPTIONS): GetFormattedPart =>
-  (date: Date, config?: Intl.DateTimeFormatOptions): string => {
+export const createDateFormatter = (
+  format: FormatDateOptions = DEFAULT_FORMAT_OPTIONS,
+) => {
+  const getFormattedPart = (
+    date: Date,
+    config?: Intl.DateTimeFormatOptions,
+  ): string => {
     return new Intl.DateTimeFormat(format.locale, {
       timeZone: format.timezone,
       ...config,
     }).format(date);
   };
 
-export const getFullYear = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { year: 'numeric' });
-};
+  const getFullYear = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { year: 'numeric' });
+  };
 
-export const getShortYear = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { year: '2-digit' });
-};
+  const getShortYear = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { year: '2-digit' });
+  };
 
-export const getFullMonthName = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { month: 'long' });
-};
+  const getFullMonthName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { month: 'long' });
+  };
 
-export const getShortMonthName = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { month: 'short' });
-};
+  const getShortMonthName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { month: 'short' });
+  };
 
-export const getFullMonthNumber = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { month: '2-digit' });
-};
+  const getFullMonthNumber = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { month: '2-digit' });
+  };
 
-export const getFullDayNumber = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { day: '2-digit' });
-};
+  const getFullDayNumber = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { day: '2-digit' });
+  };
 
-export const getFullWeekdayName = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { weekday: 'long' });
-};
+  const getFullWeekdayName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { weekday: 'long' });
+  };
 
-export const getShortWeekdayName = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { weekday: 'short' });
-};
+  const getShortWeekdayName = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { weekday: 'short' });
+  };
 
-// Helper to get 24h hour normalized to 00-23 to avoid engines returning "24" at midnight
-export const getHour24 = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  const raw = getFormattedPart(date, {
-    hour: '2-digit',
-    hour12: false,
-  }).split(' ')[0];
-  return raw === '24' ? '00' : raw;
-};
+  // Helper to get 24h hour normalized to 00-23 to avoid engines returning "24" at midnight
+  const getHour24 = (date: Date = new Date()): string => {
+    const raw = getFormattedPart(date, {
+      hour: '2-digit',
+      hour12: false,
+    }).split(' ')[0];
+    return raw === '24' ? '00' : raw;
+  };
 
-export const getHour12 = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { hour: '2-digit', hour12: true }).split(
-    ' ',
-  )[0];
-};
+  const getHour12 = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { hour: '2-digit', hour12: true }).split(
+      ' ',
+    )[0];
+  };
 
-export const getMinutes = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { minute: '2-digit' });
-};
+  const getMinutes = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { minute: '2-digit' });
+  };
 
-export const getMilliseconds = ({
-  date = new Date(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return date.getMilliseconds().toString().padStart(3, '0');
-};
+  const getMilliseconds = (date: Date = new Date()): string => {
+    return date.getMilliseconds().toString().padStart(3, '0');
+  };
 
-export const getSeconds = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { second: '2-digit' });
-};
+  const getSeconds = (date: Date = new Date()): string => {
+    return getFormattedPart(date, { second: '2-digit' });
+  };
 
-export const getMeridiem = ({
-  date = new Date(),
-  getFormattedPart = createGetFormattedPart(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getFormattedPart(date, { hour: '2-digit', hour12: true }).includes(
-    'AM',
-  )
-    ? 'AM'
-    : 'PM';
-};
+  const getMeridiem = (date: Date = new Date()) => {
+    return getFormattedPart(date, { hour: '2-digit', hour12: true }).includes(
+      'AM',
+    )
+      ? 'AM'
+      : 'PM';
+  };
 
-export const getMeridiemLower = ({
-  date = new Date(),
-  getFormattedPart,
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return getMeridiem({ date, getFormattedPart }).toLowerCase();
-};
+  const getMeridiemLower = (date: Date = new Date()) => {
+    return getMeridiem(date).toLowerCase();
+  };
 
-export const getTimestamp = ({
-  date = new Date(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return Math.floor(date.getTime() / 1000).toString();
-};
+  const getTimestamp = (date: Date = new Date()): string => {
+    return Math.floor(date.getTime() / 1000).toString();
+  };
 
-export const getTimestampMilliseconds = ({
-  date = new Date(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return date.getTime().toString();
-};
+  const getTimestampMilliseconds = (date: Date = new Date()): string => {
+    return date.getTime().toString();
+  };
 
-export const getISOString = ({
-  date = new Date(),
-}: {
-  date: Date;
-  getFormattedPart?: GetFormattedPart;
-}): string => {
-  return date.toISOString();
-};
-
-export const createDateFormatter = (
-  format: FormatDateOptions = DEFAULT_FORMAT_OPTIONS,
-) => {
-  const getFormattedPart = createGetFormattedPart(format);
+  const getISOString = (date: Date = new Date()): string => {
+    return date.toISOString();
+  };
 
   return (date: Date, format: DateFormat): string => {
-    const params = { date, getFormattedPart };
     const formatsMap: Record<string, () => string> = {
       // Los formatos siempre de mayor especifidad a menos p.ej MMMM (mes completo) > MMM (mes corto) > MM (mes)
       // Formatos de fecha
-      YYYY: () => getFullYear(params),
-      YY: () => getShortYear(params),
-      MMMM: () => getFullMonthName(params),
-      MMM: () => getShortMonthName(params),
-      MM: () => getFullMonthNumber(params),
-      DD: () => getFullDayNumber(params),
-      dddd: () => getFullWeekdayName(params),
-      ddd: () => getShortWeekdayName(params),
+      YYYY: () => getFullYear(date),
+      YY: () => getShortYear(date),
+      MMMM: () => getFullMonthName(date),
+      MMM: () => getShortMonthName(date),
+      MM: () => getFullMonthNumber(date),
+      DD: () => getFullDayNumber(date),
+      dddd: () => getFullWeekdayName(date),
+      ddd: () => getShortWeekdayName(date),
       // Formatos de tiempo
-      HH: () => getHour24(params),
-      hh: () => getHour12(params),
-      mm: () => getMinutes(params),
-      sss: () => getMilliseconds(params),
-      ss: () => getSeconds(params),
-      A: () => getMeridiem(params),
-      a: () => getMeridiemLower(params),
+      HH: () => getHour24(date),
+      hh: () => getHour12(date),
+      mm: () => getMinutes(date),
+      sss: () => getMilliseconds(date),
+      ss: () => getSeconds(date),
+      A: () => getMeridiem(date),
+      a: () => getMeridiemLower(date),
       // Timestamps
-      X: () => getTimestamp(params),
-      x: () => getTimestampMilliseconds(params),
+      X: () => getTimestamp(date),
+      x: () => getTimestampMilliseconds(date),
       // ISO_8601 = YYYY-MM-DDTHH:mm:ss.sssZ
-      ISO_8601: () => getISOString(params),
+      ISO_8601: () => getISOString(date),
     };
 
     // Dividir el string en segmentos usando corchetes como delimitadores
@@ -269,54 +164,122 @@ export const createDateFormatter = (
 
 export const formatDate = createDateFormatter(DEFAULT_FORMAT_OPTIONS);
 
-// TODOS ESTOS DE ARRAY REVISAR
-export const getShortMonthsArray = (
-  countrieType: DateCountry = 'es-ES',
-): string[] => {
-  return Array.from({ length: 12 }, (_, i) =>
-    getShortMonthName(i + 1, countrieType),
-  ); // 1-based months
-};
+// Mover a archivo de utilidades
+const pad2 = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+const toDateUTC = ({ YYYY, MM, DD }: DateUTCParts): DateUTC =>
+  `${YYYY}-${pad2(MM + 1)}-${pad2(DD)}`;
 
-export const getMonthsArray = (
-  countrieType: DateCountry = 'es-ES',
-): string[] => {
-  return Array.from({ length: 12 }, (_, i) =>
-    getMonthName(i + 1, countrieType),
-  ); // 1-based months
-};
-
-export const getWeekdaysArray = (
-  countrieType: DateCountry = 'es-ES',
-): string[] => {
-  return Array.from({ length: 7 }, (_, i) =>
-    getWeekdayName(i + 1, countrieType),
-  ); // 1-based days
-};
-
-export const getShortWeekdaysArray = (
-  countrieType: DateCountry = 'es-ES',
-): string[] => {
-  return Array.from({ length: 7 }, (_, i) =>
-    getShortWeekdayName(i + 1, countrieType),
-  ); // 1-based days
-};
-
-export const getYearsArray = (start: number, end: number): number[] => {
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-};
-
-export const getDaysInMonth = (year: number, month: number): number => {
-  return new Date(year, month + 1, 0).getDate();
-};
-
-export const getDaysArray = (year: number, month: number): Date[] => {
-  const daysInMonth = getDaysInMonth(year, month);
-  const days = [];
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push(new Date(year, month, i));
+const assertValidDateUTC = (dateUTC: DateUTC): DateUTCParts => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateUTC)) {
+    throw new Error(
+      `Invalid date string: "${dateUTC}". Expected format YYYY-MM-DD`,
+    );
   }
-  return days;
+  const [year, month, day] = dateUTC.split('-').map(Number);
+  const YYYY = year;
+  const MM = month - 1; // JavaScrip-t Date 0-based month (0=January, 11=December)
+  const DD = day;
+
+  // check that the string YYYY-MM-DD represents a real calendar date (without affecting DST)
+  const test = new Date(Date.UTC(YYYY, MM, DD));
+  if (
+    test.getUTCFullYear() !== YYYY ||
+    test.getUTCMonth() !== MM ||
+    test.getUTCDate() !== DD
+  ) {
+    throw new Error(`Nonexistent calendar date: ${dateUTC}`);
+  }
+
+  return { YYYY, MM, DD };
+};
+
+/** Add days to a (y,m,d) using UTC (without affecting DST) */
+const addDeltaUTC = ({
+  YYYY,
+  MM,
+  DD,
+  deltaValue,
+  deltaPart,
+}: DateUTCPartsWithDelta): DateUTCParts => {
+  // We normalise the delta to an integer (in case it arrives as 2.7, -3.2, etc.)
+  const delta = Number.isFinite(deltaValue) ? Math.trunc(deltaValue) : 0;
+  const dt = new Date(Date.UTC(YYYY, MM, DD));
+
+  const assertNever = (value: never): never => {
+    throw new Error(`Unexpected value: ${value}`);
+  };
+
+  // automatically normalizes overflows.
+  switch (deltaPart) {
+    case 'DD':
+      dt.setUTCDate(dt.getUTCDate() + delta);
+      break;
+    case 'MM':
+      dt.setUTCMonth(dt.getUTCMonth() + delta);
+      break;
+    case 'YYYY':
+      dt.setUTCFullYear(dt.getUTCFullYear() + delta);
+      break;
+    default:
+      assertNever(deltaPart);
+  }
+
+  return {
+    YYYY: dt.getUTCFullYear(),
+    MM: dt.getUTCMonth(),
+    DD: dt.getUTCDate(),
+  };
+};
+
+export const getYearsArray = (start: number, end?: number): number[] => {
+  const _end = end ?? new Date().getUTCFullYear();
+  return Array.from({ length: _end - start + 1 }, (_, i) => start + i);
+};
+
+export const getMonthsArray = (year?: number): string[] => {
+  const YYYY = year ?? new Date().getUTCFullYear();
+  // JavaScrip-t Date 0-based month (0=January, 11=December)
+  return Array.from({ length: 12 }, (_, MM) => toDateUTC({ YYYY, MM, DD: 1 }));
+};
+
+export const getWeekdaysArray = (dateUTC: DateUTC): string[] => {
+  const { YYYY, MM, DD } = assertValidDateUTC(dateUTC);
+
+  // JavaScrip-t Date 0-based days (0=Sunday, 1=Monday, ... 6=Saturday)
+  const jsDay = new Date(Date.UTC(YYYY, MM, DD)).getUTCDay();
+  const diffToMonday = (jsDay + 6) % 7; // 0 if it's Monday, 6 if it's Sunday
+
+  const monday = addDeltaUTC({
+    YYYY,
+    MM,
+    DD,
+    deltaValue: -diffToMonday,
+    deltaPart: 'DD',
+  });
+
+  return Array.from({ length: 7 }, (_, i) => {
+    const q = addDeltaUTC({
+      YYYY: monday.YYYY,
+      MM: monday.MM,
+      DD: monday.DD,
+      deltaValue: i,
+      deltaPart: 'DD',
+    });
+    return toDateUTC({ YYYY: q.YYYY, MM: q.MM, DD: q.DD });
+  });
+};
+
+export const getDaysInMonth = (dateUTC: DateUTC): number => {
+  const { YYYY, MM } = assertValidDateUTC(dateUTC);
+  return new Date(Date.UTC(YYYY, MM + 1, 0)).getUTCDate(); // last day of the month m
+};
+
+export const getDaysArray = (dateUTC: DateUTC): DateUTC[] => {
+  const { YYYY, MM } = assertValidDateUTC(dateUTC);
+  const daysInMonth = getDaysInMonth(dateUTC);
+  return Array.from({ length: daysInMonth }, (_, deltaInDays) =>
+    toDateUTC({ YYYY, MM, DD: deltaInDays + 1 }),
+  );
 };
 
 // Todo lo que sea sumar hacerlo con otra API
@@ -530,7 +493,12 @@ export const getLastDayOfMonth = (year: number, month: number): number => {
 };
 
 export const isLastDayOfMonth = (date: Date): boolean => {
-  return date.getDate() === getDaysInMonth(date.getFullYear(), date.getMonth());
+  const getDaysInMonth = (date: Date = new Date()): number => {
+    const y = date.getFullYear();
+    const m = date.getMonth();
+    return new Date(y, m + 1, 0).getDate(); // last day of the month m
+  };
+  return date.getDate() === getDaysInMonth(date);
 };
 
 export const isFirstDayOfMonth = (date: Date): boolean => {

@@ -471,9 +471,38 @@ export type FormatDateOptions = {
   locale: DateCountry;
 };
 
-export type GetFormattedPart = (
-  date: Date,
-  config?: Intl.DateTimeFormatOptions | undefined,
-) => string;
-
 export type DateFormat = 'ISO_8601' | string;
+
+export const DATE_FORMAT = {
+  FULL_YEAR: 'YYYY',
+  SHORT_YEAR: 'YY',
+  FULL_MONTH: 'MMMM',
+  SHORT_MONTH: 'MMM',
+  MONTH_NUMBER: 'MM',
+  DAY: 'DD',
+  FULL_WEEKDAY: 'dddd',
+  SHORT_WEEKDAY: 'ddd',
+  HOUR_24: 'HH',
+  HOUR_12: 'hh',
+  MINUTE: 'mm',
+  SECOND: 'ss',
+  MILLISECOND: 'sss',
+  MERIDIEM_UPPER: 'A',
+  MERIDIEM_LOWER: 'a',
+  TIMESTAMP: 'X',
+  TIMESTAMP_MILLISECOND: 'x',
+  ISO_8601: 'ISO_8601',
+  DATE_UTC: 'YYYY-MM-DD',
+} as const;
+
+export type DateUTC = string;
+export interface DateUTCParts {
+  YYYY: number;
+  MM: number;
+  DD: number;
+}
+
+export interface DateUTCPartsWithDelta extends DateUTCParts {
+  deltaValue: number;
+  deltaPart: 'YYYY' | 'MM' | 'DD';
+}
