@@ -5,6 +5,7 @@ import {
   parseDate,
   toISOString,
   toTimestamp,
+  toTimestampMs,
   fromTimestamp,
   isValidDate,
 
@@ -29,7 +30,7 @@ import {
   isBefore,
   isAfter,
   isBetween,
-  isSameDay,
+  isSameDate,
   isSameMonth,
   isSameYear,
   isSameWeek,
@@ -763,8 +764,8 @@ describe('Datetime', () => {
 
     test('isSameDay - checks if dates are on same day', () => {
       const sameDay = new Date('2023-07-09T15:00:00');
-      expect(isSameDay(testDate, sameDay)).toBe(true);
-      expect(isSameDay(testDate, testDate2)).toBe(false);
+      expect(isSameDate(testDate, sameDay)).toBe(true);
+      expect(isSameDate(testDate, testDate2)).toBe(false);
     });
 
     test('isSameMonth - checks if dates are in same month', () => {
