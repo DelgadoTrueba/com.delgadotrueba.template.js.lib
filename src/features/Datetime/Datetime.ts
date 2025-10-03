@@ -158,8 +158,8 @@ export const createDateFormatter = (
 
 export const formatDate = createDateFormatter(DEFAULT_FORMAT_OPTIONS);
 
-export const toTimestamp = (date: Date = new Date()): string => {
-  return Math.floor(date.getTime() / 1000).toString();
+export const toTimestamp = (date: Date = new Date()): number => {
+  return Math.floor(date.getTime() / 1000);
 };
 
 export const toTimestampMs = (date: Date = new Date()): number => {
@@ -179,78 +179,6 @@ export const parseDate = (dateString: string): Date | null => {
 
 export const fromTimestamp = (timestamp: number): Date => {
   return new Date(timestamp);
-};
-
-// Todo lo que sea sumar hacerlo con otra API
-
-export const addDays = (date: Date, days: number): Date => {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-};
-
-export const subtractDays = (date: Date, days: number): Date => {
-  return addDays(date, -days);
-};
-
-export const addHours = (date: Date, hours: number): Date => {
-  const result = new Date(date);
-  result.setHours(result.getHours() + hours);
-  return result;
-};
-
-export const addMinutes = (date: Date, minutes: number): Date => {
-  const result = new Date(date);
-  result.setMinutes(result.getMinutes() + minutes);
-  return result;
-};
-
-export const addSeconds = (date: Date, seconds: number): Date => {
-  const result = new Date(date);
-  result.setSeconds(result.getSeconds() + seconds);
-  return result;
-};
-
-export const addMonths = (date: Date, months: number): Date => {
-  const result = new Date(date);
-  result.setMonth(result.getMonth() + months);
-  return result;
-};
-
-export const addYears = (date: Date, years: number): Date => {
-  const result = new Date(date);
-  result.setFullYear(result.getFullYear() + years);
-  return result;
-};
-
-export const differenceInHours = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60));
-};
-
-export const differenceInMinutes = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / (1000 * 60));
-};
-
-export const differenceInSeconds = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / 1000);
-};
-
-export const differenceInDays = (date1: Date, date2: Date): number => {
-  const diffTime = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
-
-export const differenceInMonths = (date1: Date, date2: Date): number => {
-  const years = date2.getFullYear() - date1.getFullYear();
-  const months = date2.getMonth() - date1.getMonth();
-  return years * 12 + months;
-};
-
-export const differenceInYears = (date1: Date, date2: Date): number => {
-  return date2.getFullYear() - date1.getFullYear();
 };
 
 export const age = (
