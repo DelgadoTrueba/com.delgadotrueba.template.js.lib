@@ -2,7 +2,7 @@ import type {
   DateUTC,
   DateUTCParts,
   DateUTCPartsWithDelta,
-} from './Datetime.types';
+} from './calendarRanges.types';
 
 const pad2 = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 const toDateUTC = ({ YYYY, MM, DD }: DateUTCParts): DateUTC =>
@@ -115,7 +115,7 @@ export const getWeekdaysArray = (dateUTC: DateUTC): DateUTC[] => {
   });
 };
 
-export const getDaysInMonth = (dateUTC: DateUTC): number => {
+const getDaysInMonth = (dateUTC: DateUTC): number => {
   const { YYYY, MM } = assertValidDateUTC(dateUTC);
   return new Date(Date.UTC(YYYY, MM + 1, 0)).getUTCDate(); // last day of the month m
 };

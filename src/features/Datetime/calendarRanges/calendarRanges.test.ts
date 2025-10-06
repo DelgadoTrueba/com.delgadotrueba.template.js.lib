@@ -4,7 +4,7 @@ import {
   getMonthsArray,
   getWeekdaysArray,
   getYearsArray,
-} from './DatetimeRange';
+} from './calendarRanges';
 
 describe('DatetimeRange', () => {
   test('getDaysArray - gets array of days in month', () => {

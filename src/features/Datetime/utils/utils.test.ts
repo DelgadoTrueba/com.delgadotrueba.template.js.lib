@@ -58,7 +58,7 @@ import {
   getFirstDayOfMonth,
   getLastDayOfMonth,
   isLeapYear,
-} from './DatetimeUtils';
+} from './utils';
 
 describe('DatetimeUtils', () => {
   const testDate = new Date('2023-07-09'); // Sunday

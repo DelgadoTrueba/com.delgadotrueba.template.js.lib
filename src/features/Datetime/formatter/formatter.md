@@ -1,4 +1,4 @@
-# formatDate
+# Datetime > Formatter
 
 Formatea una fecha con un patrón específico, con la configuración por defecto de FormatDateOptions = { timezone: 'Europe/Madrid', locale: 'es-ES'}
 
