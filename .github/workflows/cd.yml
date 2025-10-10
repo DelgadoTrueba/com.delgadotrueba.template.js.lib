@@ -96,7 +96,8 @@ jobs:
         uses: andresz1/size-limit-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          package_manager: pnpm # todo
+          skip_step: install
+          script: pnpm exec size-limit --json
 
       - name: SonarCloud scan 🔍
         uses: SonarSource/sonarqube-scan-action@v6
