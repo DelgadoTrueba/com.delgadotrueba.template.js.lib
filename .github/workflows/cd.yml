@@ -92,6 +92,9 @@ jobs:
       - name: Publish to NPM 🚀
         run: pnpm publish --no-git-checks
 
+      - name: Size 📏
+        run: pnpm run size
+
       - name: SonarCloud scan 🔍
         uses: SonarSource/sonarqube-scan-action@v6
         env:

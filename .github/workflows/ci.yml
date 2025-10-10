@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, main]
     types: [opened, synchronize, reopened, ready_for_review]
   # push:
   #   branches: [develop]
@@ -46,6 +46,12 @@ jobs:
 
       - name: Test ✅ (con coverage)
         run: pnpm run test:coverage
+
+      - name: Build 🔧
+        run: pnpm run build
+
+      - name: Size 📏
+        run: pnpm run size
 
       - name: SonarCloud scan 🔍
         uses: SonarSource/sonarqube-scan-action@v6
