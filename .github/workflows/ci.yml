@@ -48,7 +48,7 @@ jobs:
         run: pnpm run test:coverage
 
       - name: Size 📏
-        uses: pnpm run size
+        run: pnpm run size
 
       - name: SonarCloud scan 🔍
         uses: SonarSource/sonarqube-scan-action@v6
