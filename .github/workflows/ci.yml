@@ -53,6 +53,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           skip_step: install
           script: pnpm exec size-limit --json
+          package_manager: pnpm # todo
 
       - name: SonarCloud scan 🔍
         uses: SonarSource/sonarqube-scan-action@v6
