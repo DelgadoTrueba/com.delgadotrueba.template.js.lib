@@ -1,2 +1,2 @@
 export * from './lib/sum';
-export * from './features/Datetime';
+export * from './features/datetime';
