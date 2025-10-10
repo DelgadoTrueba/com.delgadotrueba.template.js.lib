@@ -1,4 +1,4 @@
-import { fromTimestamp, parseDatetime } from './parser';
+import { fromTimestampMs, parseDatetime } from './parser';
 
 describe('Parser', () => {
   const testDate = new Date('2023-07-09'); // Sunday
@@ -12,9 +12,11 @@ describe('Parser', () => {
     // probar los cambios de hora
   });
 
-  test('fromTimestamp - creates date from timestamp', () => {
+  test('fromTimestampMs - creates date from milliseconds', () => {
     const timestamp = testDate.getTime();
-    const date = fromTimestamp(timestamp);
+    const date = fromTimestampMs(timestamp);
     expect(date).toEqual(testDate);
   });
+
+  // todo miliseconds
 });

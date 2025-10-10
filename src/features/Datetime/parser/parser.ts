@@ -14,6 +14,8 @@
 
 import { Temporal } from '@js-temporal/polyfill';
 
+import { DEFAULT_FORMAT_OPTIONS } from '../Datetime.constants';
+
 import type { DateFormat, FormatDateOptions } from '../Datetime.types';
 
 type Parts = {
@@ -24,11 +26,6 @@ type Parts = {
   minute?: number;
   second?: number;
   millisecond?: number;
-};
-
-const DEFAULT_FORMAT_OPTIONS: FormatDateOptions = {
-  timezone: 'Europe/Madrid',
-  locale: 'es-ES',
 };
 
 function assertValidDatetime(dateParts: Parts) {
@@ -142,6 +139,14 @@ export const createDatetimeParser = (
 
 export const parseDatetime = createDatetimeParser(DEFAULT_FORMAT_OPTIONS);
 
-export const fromTimestamp = (timestamp: number): Date => {
-  return new Date(timestamp);
+export const fromTimestamp = (seconds: number): Date => {
+  return new Date(seconds * 1000);
+};
+
+export const fromTimestampMs = (milliseconds: number): Date => {
+  return new Date(milliseconds);
+};
+
+export const fromISOString = (date: string): Date => {
+  return new Date(Date.parse(date));
 };

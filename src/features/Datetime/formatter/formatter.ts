@@ -1,11 +1,6 @@
+import { DEFAULT_FORMAT_OPTIONS } from '../Datetime.constants';
+
 import type { DateFormat, FormatDateOptions } from '../Datetime.types';
-
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Formatter
-
-const DEFAULT_FORMAT_OPTIONS: FormatDateOptions = {
-  timezone: 'Europe/Madrid',
-  locale: 'es-ES',
-};
 
 export const createDatetimeFormatter = (
   options: FormatDateOptions = DEFAULT_FORMAT_OPTIONS,
