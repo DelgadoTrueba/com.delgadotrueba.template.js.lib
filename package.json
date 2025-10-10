@@ -72,24 +72,25 @@
   "module": "./dist/esm/src/index.js",
   "types": "./dist/esm/src/index.d.ts",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "require": {
-        "default": "./dist/cjs/src/index.js",
-        "types": "./dist/cjs/src/index.d.ts"
+        "types": "./dist/cjs/src/index.d.ts",
+        "default": "./dist/cjs/src/index.js"
       },
       "import": {
-        "default": "./dist/esm/src/index.js",
-        "types": "./dist/esm/src/index.d.ts"
+        "types": "./dist/esm/src/index.d.ts",
+        "default": "./dist/esm/src/index.js"
       }
     },
-    "./public-api": {
+    "./dateTime/*": {
       "require": {
-        "default": "./dist/cjs/src/public-api.js",
-        "types": "./dist/cjs/src/public-api.d.ts"
+        "types": "./dist/cjs/src/features/dateTime/*/index.d.ts",
+        "default": "./dist/cjs/src/features/dateTime/*/index.js"
       },
       "import": {
-        "default": "./dist/esm/src/public-api.js",
-        "types": "./dist/esm/src/public-api.d.ts"
+        "types": "./dist/esm/src/features/dateTime/*/index.d.ts",
+        "default": "./dist/esm/src/features/dateTime/*/index.js"
       }
     }
   },
