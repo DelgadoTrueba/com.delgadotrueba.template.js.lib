@@ -48,7 +48,9 @@ jobs:
         run: pnpm run test:coverage
 
       - name: Size 📏
-        run: pnpm run size
+        uses: andresz1/size-limit-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: SonarCloud scan 🔍
         uses: SonarSource/sonarqube-scan-action@v6
