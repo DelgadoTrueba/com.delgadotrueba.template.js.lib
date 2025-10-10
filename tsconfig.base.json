@@ -27,7 +27,7 @@
       "@utils-test/*": ["src/utils-test/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "./global.d.ts"],
   "exclude": ["node_modules"],
   "references": [
     {

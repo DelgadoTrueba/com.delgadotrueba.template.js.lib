@@ -1,5 +1,7 @@
 # Changelog
 
+- feat: create datetime feature 📅
+
 ### Release version <version 0.0.3>
 
 ### Create scaffolding #1

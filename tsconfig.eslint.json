@@ -3,5 +3,10 @@
   "compilerOptions": {
     "composite": true
   },
-  "include": ["src/**/*.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "./global.d.ts"
+  ]
 }
